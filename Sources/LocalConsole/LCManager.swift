@@ -1399,7 +1399,7 @@ class LumaView: UIView {
             }
             
             pillView.setValue(2, forKey: "style")
-            pillView.setValue(1, forKey: "background" + "Luminance")
+            //pillView.setValue(1, forKey: "background" + "Luminance")
             pillView.perform(NSSelectorFromString("_" + "update" + "Style"))
             
             addSubview(pillView)
