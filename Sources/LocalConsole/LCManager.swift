@@ -5,14 +5,13 @@
 //  Copyright © 2021 Duraid Abdul. All rights reserved.
 //
 
-import UIKit
 import SwiftUI
+import UIKit
 
 var GLOBAL_BORDER_TRACKERS: [BorderManager] = []
 
 @available(iOSApplicationExtension, unavailable)
 public class LCManager: NSObject, UIGestureRecognizerDelegate {
-    
     public static let shared = LCManager()
     
     /// Set the font size. The font can be set to a minimum value of 5.0 and a maximum value of 20.0. The default value is 8.
@@ -31,10 +30,8 @@ public class LCManager: NSObject, UIGestureRecognizerDelegate {
     var currentText: String = "" {
         didSet {
             if isVisible {
-                
                 // Ensure we are performing UI updates on the main thread.
                 DispatchQueue.main.async {
-                    
                     // Ensure the console doesn't get caught into any external animation blocks.
                     UIView.performWithoutAnimation {
                         self.commitTextChanges(requestMenuUpdate: oldValue == "" || (oldValue != "" && self.currentText == ""))
@@ -119,10 +116,10 @@ public class LCManager: NSObject, UIGestureRecognizerDelegate {
             // Update text view height.
             if consoleView.frame.size.height > ResizeController.kMaxConsoleHeight {
                 consoleTextView.frame.size.height = ResizeController.kMaxConsoleHeight - 2
-                + (consoleView.frame.size.height - ResizeController.kMaxConsoleHeight) * 2 / 3
+                    + (consoleView.frame.size.height - ResizeController.kMaxConsoleHeight) * 2 / 3
             } else if consoleView.frame.size.height < ResizeController.kMinConsoleHeight {
                 consoleTextView.frame.size.height = ResizeController.kMinConsoleHeight - 2
-                + (consoleView.frame.size.height - ResizeController.kMinConsoleHeight) * 2 / 3
+                    + (consoleView.frame.size.height - ResizeController.kMinConsoleHeight) * 2 / 3
             } else {
                 consoleTextView.frame.size.height = consoleSize.height - 2
             }
@@ -142,7 +139,7 @@ public class LCManager: NSObject, UIGestureRecognizerDelegate {
     lazy var consoleView = UIView()
     
     /// Text view that displays printed items.
-    lazy var consoleTextView = InvertedTextView() 
+    lazy var consoleTextView = InvertedTextView()
     
     /// Button that reveals menu.
     lazy var menuButton = ConsoleMenuButton()
@@ -167,14 +164,14 @@ public class LCManager: NSObject, UIGestureRecognizerDelegate {
         let isLandscapePhone = UIDevice.current.userInterfaceIdiom == .phone && consoleViewController.view.frame.width > consoleViewController.view.frame.height
         
         let isLandscapeLeftNotchedPhone = UIDevice.current.orientation == .landscapeLeft
-        && UIDevice.current.userInterfaceIdiom == .phone
-        && UIDevice.current.hasNotch
-        && isLandscapePhone
+            && UIDevice.current.userInterfaceIdiom == .phone
+            && UIDevice.current.hasNotch
+            && isLandscapePhone
         
         let isLandscapeRightNotchedPhone = UIDevice.current.orientation == .landscapeRight
-        && UIDevice.current.userInterfaceIdiom == .phone
-        && UIDevice.current.hasNotch
-        && isLandscapePhone
+            && UIDevice.current.userInterfaceIdiom == .phone
+            && UIDevice.current.hasNotch
+            && isLandscapePhone
         
         let safeAreaInsets = consoleViewController.view.safeAreaInsets
         
@@ -189,11 +186,10 @@ public class LCManager: NSObject, UIGestureRecognizerDelegate {
                 CGPoint(x: leftEndpointX, y: topEndpointY),
                 CGPoint(x: rightEndpointX, y: topEndpointY),
                 CGPoint(x: leftEndpointX, y: bottomEndpointY),
-                CGPoint(x: rightEndpointX, y: bottomEndpointY),
+                CGPoint(x: rightEndpointX, y: bottomEndpointY)
             ]
             
             if consoleView.frame.minX <= 0 {
-                
                 // Left edge endpoints.
                 endpoints = [endpoints[0], endpoints[2]]
                 
@@ -208,7 +204,6 @@ public class LCManager: NSObject, UIGestureRecognizerDelegate {
                     }
                 }
             } else if consoleView.frame.maxX >= screenSize.width {
-                
                 // Right edge endpoints.
                 endpoints = [endpoints[1], endpoints[3]]
                 
@@ -234,7 +229,6 @@ public class LCManager: NSObject, UIGestureRecognizerDelegate {
             ]
             
             if consoleView.frame.minX <= 0 {
-                
                 // Left edge hiding endpoints.
                 if consoleView.center.y < (screenSize.height - (temporaryKeyboardHeightValueTracker ?? 0)) / 2 {
                     endpoints.append(CGPoint(x: -consoleSize.width / 2 + 28,
@@ -244,7 +238,6 @@ public class LCManager: NSObject, UIGestureRecognizerDelegate {
                                              y: endpoints[1].y))
                 }
             } else if consoleView.frame.maxX >= screenSize.width {
-                
                 // Right edge hiding endpoints.
                 if consoleView.center.y < (screenSize.height - (temporaryKeyboardHeightValueTracker ?? 0)) / 2 {
                     endpoints.append(CGPoint(x: screenSize.width + consoleSize.width / 2 - 28,
@@ -264,7 +257,6 @@ public class LCManager: NSObject, UIGestureRecognizerDelegate {
     func configureConsole() {
         consoleSize = CGSize(width: UserDefaults.standard.object(forKey: "LocalConsole.Width") as? CGFloat ?? consoleSize.width,
                              height: UserDefaults.standard.object(forKey: "LocalConsole.Height") as? CGFloat ?? consoleSize.height)
-        
         
         consoleView.layer.shadowRadius = 16
         consoleView.layer.shadowOpacity = 0.5
@@ -325,14 +317,15 @@ public class LCManager: NSObject, UIGestureRecognizerDelegate {
             x: consoleView.bounds.width - 44,
             y: consoleView.bounds.height - 36,
             width: 44,
-            height: 36 + 4 /*Offests the context menu by the desired amount*/
+            height: 36 + 4 /* Offests the context menu by the desired amount */
         )
         menuButton.autoresizingMask = [.flexibleLeftMargin, .flexibleTopMargin]
         
         let circleFrame = CGRect(
             x: menuButton.bounds.width - diameter - (consoleView.layer.cornerRadius - diameter / 2),
             y: menuButton.bounds.height - diameter - (consoleView.layer.cornerRadius - diameter / 2) - 4,
-            width: diameter, height: diameter)
+            width: diameter, height: diameter
+        )
         
         let circle = UIView(frame: circleFrame)
         circle.backgroundColor = UIColor(white: 0.2, alpha: 0.95)
@@ -395,11 +388,9 @@ public class LCManager: NSObject, UIGestureRecognizerDelegate {
             } else {
                 return UIApplication.shared.windows.first
             }
-            
         }
         
         func addConsoleToWindow(window: UIWindow) {
-            
             window.addSubview(consoleViewController.view)
             window.rootViewController?.addChild(consoleViewController)
             
@@ -458,7 +449,6 @@ public class LCManager: NSObject, UIGestureRecognizerDelegate {
             guard oldValue != isVisible else { return }
             
             if isVisible {
-                
                 if !isConsoleConfigured {
                     DispatchQueue.main.async { [self] in
                         configureConsoleViewController()
@@ -533,7 +523,6 @@ public class LCManager: NSObject, UIGestureRecognizerDelegate {
                 unhideButton.isHidden = false
                 
             } else {
-                
                 lumaHeightAnchor.constant = consoleView.frame.size.height
                 lumaWidthAnchor.constant = 0
                 UIViewPropertyAnimator(duration: 0.4, dampingRatio: 1) { [self] in
@@ -558,7 +547,6 @@ public class LCManager: NSObject, UIGestureRecognizerDelegate {
     }
     
     @objc func handleDeviceOrientationChange(previousSize: CGSize) {
-        
         // Cancel the panner console is being panned to allow for location manipulation.
         [LCManager.shared.panRecognizer, LCManager.shared.longPressRecognizer].forEach {
             $0.isEnabled.toggle(); $0.isEnabled.toggle()
@@ -628,11 +616,9 @@ public class LCManager: NSObject, UIGestureRecognizerDelegate {
         
         // Cut down string if it exceeds 50,000 characters to keep text view running smoothly.
         if _currentText.count > 50000 && !isCharacterLimitDisabled {
-            
             if !hasShortened && !isCharacterLimitWarningDisabled {
                 hasShortened = true
                 Swift.print("LocalConsole's content has exceeded 50,000 characters.\nTo maintain performance, LCManager cuts down the beginning of the printed content. To disable this behaviour, set LCManager.shared.isCharacterLimitDisabled to true.\nTo disable this warning, set LCManager.shared.isCharacterLimitWarningDisabled = true.")
-                
             }
             
             let shortenedString = String(_currentText.suffix(50000))
@@ -657,6 +643,7 @@ public class LCManager: NSObject, UIGestureRecognizerDelegate {
     var temporaryKeyboardHeightValueTracker: CGFloat?
     
     // MARK: Handle keyboard show/hide.
+
     private var keyboardHeight: CGFloat? = nil {
         didSet {
             temporaryKeyboardHeightValueTracker = oldValue
@@ -676,7 +663,7 @@ public class LCManager: NSObject, UIGestureRecognizerDelegate {
     @objc func keyboardWillShow(_ notification: Notification) {
         if let keyboardFrame: NSValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
             let keyboardRectangle = keyboardFrame.cgRectValue
-            self.keyboardHeight = keyboardRectangle.height
+            keyboardHeight = keyboardRectangle.height
         }
     }
     
@@ -686,7 +673,6 @@ public class LCManager: NSObject, UIGestureRecognizerDelegate {
     
     private var debugBordersEnabled = false {
         didSet {
-            
             UIView.swizzleDebugBehaviour_UNTRACKABLE_TOGGLE()
             
             guard debugBordersEnabled else {
@@ -728,7 +714,7 @@ public class LCManager: NSObject, UIGestureRecognizerDelegate {
             
             if currentText != "" { print("\n") }
             
-            dynamicReportTimer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [self] timer in
+            dynamicReportTimer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [self] _ in
                 
                 guard consoleTextView.panGestureRecognizer.numberOfTouches == 0 else { return }
                 
@@ -757,12 +743,10 @@ public class LCManager: NSObject, UIGestureRecognizerDelegate {
                     timerInvalidationCounter = 0
                     
                 } else {
-                    
                     timerInvalidationCounter += 1
                     
                     // It has been 2 seconds and values have not changed.
                     if timerInvalidationCounter == 2 {
-                        
                         // Invalidate the timer if there is no longer anything to update.
                         dynamicReportTimer = nil
                     }
@@ -770,20 +754,20 @@ public class LCManager: NSObject, UIGestureRecognizerDelegate {
             }
             
             print(
-                  """
-                  Model Name:         \(SystemReport.shared.gestaltMarketingName)
-                  Model Identifier:   \(SystemReport.shared.gestaltModelIdentifier)
-                  Architecture:       \(SystemReport.shared.gestaltArchitecture)
-                  Firmware:           \(SystemReport.shared.gestaltFirmwareVersion)
-                  Kernel Version:     \(SystemReport.shared.kernel) \(SystemReport.shared.kernelVersion)
-                  System Version:     \(SystemReport.shared.versionString)
-                  OS Compile Date:    \(SystemReport.shared.compileDate)
-                  Memory:             \(round(100 * Double(ProcessInfo.processInfo.physicalMemory) * pow(10, -9)) / 100) GB
-                  Processor Cores:    \(Int(ProcessInfo.processInfo.processorCount))
-                  Thermal State:      \(SystemReport.shared.thermalState)
-                  System Uptime:      \(ProcessInfo.processInfo.systemUptime.formattedString!)
-                  Low Power Mode:     \(ProcessInfo.processInfo.isLowPowerModeEnabled)
-                  """
+                """
+                Model Name:         \(SystemReport.shared.gestaltMarketingName)
+                Model Identifier:   \(SystemReport.shared.gestaltModelIdentifier)
+                Architecture:       \(SystemReport.shared.gestaltArchitecture)
+                Firmware:           \(SystemReport.shared.gestaltFirmwareVersion)
+                Kernel Version:     \(SystemReport.shared.kernel) \(SystemReport.shared.kernelVersion)
+                System Version:     \(SystemReport.shared.versionString)
+                OS Compile Date:    \(SystemReport.shared.compileDate)
+                Memory:             \(round(100 * Double(ProcessInfo.processInfo.physicalMemory) * pow(10, -9)) / 100) GB
+                Processor Cores:    \(Int(ProcessInfo.processInfo.processorCount))
+                Thermal State:      \(SystemReport.shared.thermalState)
+                System Uptime:      \(ProcessInfo.processInfo.systemUptime.formattedString!)
+                Low Power Mode:     \(ProcessInfo.processInfo.isLowPowerModeEnabled)
+                """
             )
         }
     }
@@ -796,26 +780,24 @@ public class LCManager: NSObject, UIGestureRecognizerDelegate {
             let safeAreaInsets = consoleViewController.view.safeAreaInsets ?? .zero
             
             print(
-                  """
-                  Screen Size:       \(UIScreen.main.bounds.size)
-                  Corner Radius:     \(UIScreen.main.value(forKey: "_displ" + "ayCorn" + "erRa" + "dius") as! CGFloat)
-                  Screen Scale:      \(UIScreen.main.scale)
-                  Max Frame Rate:    \(UIScreen.main.maximumFramesPerSecond) Hz
-                  Brightness:        \(String(format: "%.2f", UIScreen.main.brightness))
-                  
-                  Safe Area Insets:  top:    \(String(describing: safeAreaInsets.top))
-                                     left:   \(String(describing: safeAreaInsets.left))
-                                     bottom: \(String(describing: safeAreaInsets.bottom))
-                                     right:  \(String(describing: safeAreaInsets.right))
-                  """
+                """
+                Screen Size:       \(UIScreen.main.bounds.size)
+                Corner Radius:     \(UIScreen.main.value(forKey: "_displ" + "ayCorn" + "erRa" + "dius") as! CGFloat)
+                Screen Scale:      \(UIScreen.main.scale)
+                Max Frame Rate:    \(UIScreen.main.maximumFramesPerSecond) Hz
+                Brightness:        \(String(format: "%.2f", UIScreen.main.brightness))
+                
+                Safe Area Insets:  top:    \(String(describing: safeAreaInsets.top))
+                                   left:   \(String(describing: safeAreaInsets.left))
+                                   bottom: \(String(describing: safeAreaInsets.bottom))
+                                   right:  \(String(describing: safeAreaInsets.right))
+                """
             )
         }
     }
     
     func commitTextChanges(requestMenuUpdate menuUpdateRequested: Bool) {
-        
         if consoleTextView.contentOffset.y > consoleTextView.contentSize.height - consoleTextView.bounds.size.height - 20 {
-            
             // Weird, weird fix that makes the scroll view bottom pinning system work.
             consoleTextView.isScrollEnabled.toggle()
             consoleTextView.isScrollEnabled.toggle()
@@ -888,14 +870,13 @@ public class LCManager: NSObject, UIGestureRecognizerDelegate {
         
         var debugActions: [UIMenuElement] = []
         
-        if #available(iOS 15, *) {
+        if #available(iOS 16, *) {
             frameSymbol = "square.inset.filled"
             
             let deferredUserDefaultsList = UIDeferredMenuElement.uncached { completion in
                 var actions: [UIAction] = []
                 
                 let keys: [String] = {
-                    
                     if self.showAllUserDefaultsKeys {
                         return UserDefaults.standard.dictionaryRepresentation().map { $0.key }
                     }
@@ -920,7 +901,6 @@ public class LCManager: NSObject, UIGestureRecognizerDelegate {
                     )
                 } else {
                     for key in keys.sorted(by: { $0.lowercased() < $1.lowercased() }) {
-                        
                         // Old LocalConsole Key Cleanup
                         guard !key.contains("LocalConsole_") else {
                             UserDefaults.standard.removeObject(forKey: key)
@@ -944,23 +924,23 @@ public class LCManager: NSObject, UIGestureRecognizerDelegate {
                                 ]
                                 
                                 let attributedTitle: NSMutableAttributedString = {
-                                    
                                     let attributedString = NSMutableAttributedString(string: "Key\n" + key, attributes: attributes)
                                     attributedString.addAttributes(
-                                        [NSAttributedString.Key.foregroundColor : UIColor.label.withAlphaComponent(0.5),
-                                         NSAttributedString.Key.paragraphStyle : headerParagraphStyle],
-                                        range: NSRange(location: 0, length: 3))
+                                        [NSAttributedString.Key.foregroundColor: UIColor.label.withAlphaComponent(0.5),
+                                         NSAttributedString.Key.paragraphStyle: headerParagraphStyle],
+                                        range: NSRange(location: 0, length: 3)
+                                    )
                                     
                                     return attributedString
                                 }()
                                 
                                 let attributedMessage: NSMutableAttributedString = {
-                                    
                                     let attributedString = NSMutableAttributedString(string: "\nValue\n" + "\(value)", attributes: attributes)
                                     attributedString.addAttributes(
-                                        [NSAttributedString.Key.foregroundColor : UIColor.label.withAlphaComponent(0.5),
-                                         NSAttributedString.Key.paragraphStyle : headerParagraphStyle],
-                                        range: NSRange(location: 0, length: 7))
+                                        [NSAttributedString.Key.foregroundColor: UIColor.label.withAlphaComponent(0.5),
+                                         NSAttributedString.Key.paragraphStyle: headerParagraphStyle],
+                                        range: NSRange(location: 0, length: 7)
+                                    )
                                     
                                     return attributedString
                                 }()
@@ -978,13 +958,12 @@ public class LCManager: NSObject, UIGestureRecognizerDelegate {
                                 }))
                                 
                                 self.consoleViewController.present(alertController,
-                                                            animated: true)
+                                                                   animated: true)
                             }
                             action.subtitle = "\(value)"
                             actions.append(action)
                         }
                     }
-                    
                     
                     actions.append(
                         UIAction(title: "Clear Defaults",
@@ -996,7 +975,6 @@ public class LCManager: NSObject, UIGestureRecognizerDelegate {
                     )
                 }
                 
-                
                 completion(actions)
             }
             
@@ -1004,7 +982,6 @@ public class LCManager: NSObject, UIGestureRecognizerDelegate {
             
             debugActions.append(userDefaults)
         }
-        
         
         let viewFrames = UIAction(
             title: debugBordersEnabled ? "Hide View Frames" : "Show View Frames",
@@ -1020,7 +997,6 @@ public class LCManager: NSObject, UIGestureRecognizerDelegate {
         
         // Show the right glyph for the current device being used.
         let deviceSymbol: String = {
-            
             let hasHomeButton = UIScreen.main.value(forKey: "_displ" + "ayCorn" + "erRa" + "dius") as! CGFloat == 0
             
             if UIDevice.current.userInterfaceIdiom == .pad {
@@ -1063,7 +1039,6 @@ public class LCManager: NSObject, UIGestureRecognizerDelegate {
             // Concurrently run these snapshots to decrease the time to crash.
             for _ in 0...1000 {
                 DispatchQueue.global(qos: .default).async {
-                    
                     // This will cause jetsam to terminate backboardd.
                     while true {
                         window.snapshotView(afterScreenUpdates: false)
@@ -1073,13 +1048,13 @@ public class LCManager: NSObject, UIGestureRecognizerDelegate {
         }
         
         debugActions.append(contentsOf: [viewFrames, systemReport, displayReport])
-        let destructActions = [terminateApplication , respring]
+        let destructActions = [terminateApplication, respring]
         
         let debugMenu = UIMenu(
             title: "Debug", image: UIImage(systemName: "ant"),
             children: [
                 UIMenu(title: "", options: .displayInline, children: debugActions),
-                UIMenu(title: "", options: .displayInline, children: destructActions),
+                UIMenu(title: "", options: .displayInline, children: destructActions)
             ]
         )
         
@@ -1145,9 +1120,8 @@ public class LCManager: NSObject, UIGestureRecognizerDelegate {
     var consolePiPPanner_frameRateRequestID: UUID?
     
     @objc func consolePiPPanner(recognizer: UIPanGestureRecognizer) {
-        
         if recognizer.state == .began {
-            if #available(iOS 15, *) {
+            if #available(iOS 16, *) {
                 consolePiPPanner_frameRateRequestID = UUID()
                 FrameRateRequest.shared.activate(id: consolePiPPanner_frameRateRequestID!)
             }
@@ -1175,7 +1149,7 @@ public class LCManager: NSObject, UIGestureRecognizerDelegate {
             
         case .ended, .cancelled:
             
-            if #available(iOS 15, *), let id = consolePiPPanner_frameRateRequestID {
+            if #available(iOS 16, *), let id = consolePiPPanner_frameRateRequestID {
                 consolePiPPanner_frameRateRequestID = nil
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                     FrameRateRequest.shared.deactivate(id: id)
@@ -1285,7 +1259,6 @@ class ConsoleMenuButton: UIButton {
     }
     
     override func contextMenuInteraction(_ interaction: UIContextMenuInteraction, willEndFor configuration: UIContextMenuConfiguration, animator: UIContextMenuInteractionAnimating?) {
-        
         SwizzleTool.pauseDidAddSubviewSwizzledClosure = false
     }
 }
@@ -1302,17 +1275,20 @@ import UIKit.UIGestureRecognizerSubclass
 
 public class UITapStartEndGestureRecognizer: UITapGestureRecognizer {
     override public func touchesBegan(_ touches: Set<UITouch>, with: UIEvent) {
-        self.state = .began
+        state = .began
     }
+
     override public func touchesMoved(_ touches: Set<UITouch>, with: UIEvent) {
-        self.state = .changed
+        state = .changed
     }
+
     override public func touchesEnded(_ touches: Set<UITouch>, with: UIEvent) {
-        self.state = .ended
+        state = .ended
     }
 }
 
 // MARK: Fun hacks!
+
 extension UIView {
     /// Swizzle UIView to use custom frame system when needed.
     static func swizzleDebugBehaviour_UNTRACKABLE_TOGGLE() {
@@ -1331,7 +1307,6 @@ extension UIView {
 }
 
 class SwizzleTool: NSObject {
-    
     /// Ensure context menus always show in a non reversed order.
     func swizzleContextMenuReverseOrder() {
         guard let originalMethod = class_getInstanceMethod(NSClassFromString("_" + "UI" + "Context" + "Menu" + "List" + "View").self, NSSelectorFromString("reverses" + "Action" + "Order")),
@@ -1342,12 +1317,13 @@ class SwizzleTool: NSObject {
     }
 
     @objc func swizzled_reverses_Action_Order() -> Bool {
-        if let menu = self.value(forKey: "displayed" + "Menu") as? UIMenu,
-           menu.title == "Debug" || menu.title == "User" + "Defaults" {
+        if let menu = value(forKey: "displayed" + "Menu") as? UIMenu,
+           menu.title == "Debug" || menu.title == "User" + "Defaults"
+        {
             return false
         }
         
-        if let orig = self.value(forKey: "_" + "reverses" + "Action" + "Order") as? Bool {
+        if let orig = value(forKey: "_" + "reverses" + "Action" + "Order") as? Bool {
             return orig
         }
         
@@ -1381,7 +1357,6 @@ class LumaView: UIView {
         Bundle(path: "/Sys" + "tem/Lib" + "rary/Private" + "Framework" + "s/Material" + "Kit." + "framework")!.load()
 
         if let Pill = NSClassFromString("MT" + "Luma" + "Dodge" + "Pill" + "View") as? UIView.Type {
-            
             let pillView = Pill.init()
             
             enum Style: Int {
@@ -1399,7 +1374,7 @@ class LumaView: UIView {
             }
             
             pillView.setValue(2, forKey: "style")
-            //pillView.setValue(1, forKey: "background" + "Luminance")
+            // pillView.setValue(1, forKey: "background" + "Luminance")
             pillView.perform(NSSelectorFromString("_" + "update" + "Style"))
             
             addSubview(pillView)
@@ -1461,13 +1436,13 @@ class LumaView: UIView {
         clipsToBounds = true
     }
     
+    @available(*, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 }
 
 class InvertedTextView: UITextView {
-    
     var pendingOffsetChange = false
     
     // Thanks to WWDC21 UIKit Lab!
@@ -1504,9 +1479,9 @@ extension UIDevice {
 
 extension String {
     func stringAfterFirstOccurenceOf(delimiter: String) -> String? {
-       guard let upperIndex = (self.range(of: delimiter)?.upperBound) else { return nil }
-       let trailingString: String = .init(self.suffix(from: upperIndex))
-       return trailingString
+        guard let upperIndex = (range(of: delimiter)?.upperBound) else { return nil }
+        let trailingString: String = .init(suffix(from: upperIndex))
+        return trailingString
     }
 }
 
@@ -1518,7 +1493,7 @@ extension TimeInterval {
     }
 }
 
-fileprivate func _debugPrint(_ items: Any) {
+private func _debugPrint(_ items: Any) {
     print(items)
 }
 
@@ -1539,25 +1514,25 @@ class ConsoleViewController: UIViewController {
 }
 
 // MARK: Frame Rate Request
+
 /**
-An object that allows you to manually request an increased display refresh rate on ProMotion devices.
+ An object that allows you to manually request an increased display refresh rate on ProMotion devices.
 
-*The display refresh rate does not exceed 60 Hz when low power mode is enabled.*
+ *The display refresh rate does not exceed 60 Hz when low power mode is enabled.*
 
-**Do not set an excessive duration. Doing so will negatively impact battery life.**
+ **Do not set an excessive duration. Doing so will negatively impact battery life.**
  
-```
-// Example
-FrameRateRequest.shared.perform(duration: 0.5)
-request.perform()
-```
- */
-@available(iOS 15, *)
+ ```
+ // Example
+ FrameRateRequest.shared.perform(duration: 0.5)
+ request.perform()
+ ```
+  */
+@available(iOS 16, *)
 final class FrameRateRequest {
-    
     static let shared = FrameRateRequest()
     
-    lazy private var displayLink = CADisplayLink(target: self, selector: #selector(dummyFunction))
+    private lazy var displayLink = CADisplayLink(target: self, selector: #selector(dummyFunction))
     
     private var requestIdentifiers: [UUID] = [] {
         didSet {
@@ -1591,7 +1566,6 @@ final class FrameRateRequest {
     
     /// Perform frame rate request.
     public func perform(duration: Double) {
-
         guard UIScreen.main.maximumFramesPerSecond > 60 else { return }
         
         let id = UUID()
