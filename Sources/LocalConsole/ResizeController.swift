@@ -9,7 +9,6 @@ import UIKit
 
 @available(iOSApplicationExtension, unavailable)
 class ResizeController {
-    
     public static let shared = ResizeController()
     
     lazy var platterView = PlatterView(frame: .zero)
@@ -19,11 +18,10 @@ class ResizeController {
         
         return CGPoint(x: (containerViewSize.width * UIScreen.main.scale / 2).rounded() / UIScreen.main.scale,
                        y: (containerViewSize.height * UIScreen.main.scale / 2).rounded() / UIScreen.main.scale
-                         + (UIScreen.hasRoundedCorners ? 0 : 24))
+                           + (UIScreen.hasRoundedCorners ? 0 : 24))
     }
     
     lazy var consoleOutlineView: UIView = {
-        
         let consoleViewReference = LCManager.shared.consoleView
         
         let view = UIView()
@@ -119,19 +117,16 @@ class ResizeController {
             // Ensure initial autolayout is performed unanimated.
             LCManager.shared.consoleViewController.view.layoutIfNeeded()
             
-            if #available(iOS 15, *) {
+            if #available(iOS 16, *) {
                 FrameRateRequest.shared.perform(duration: 1.5)
             }
             
             if isActive {
-                
                 UIViewPropertyAnimator(duration: 0.75, dampingRatio: 1) {
-                    
                     let textView = LCManager.shared.consoleTextView
                     
                     textView.contentOffset.y = textView.contentSize.height - textView.bounds.size.height
                 }.startAnimation()
-                
                 
                 if LCManager.shared.consoleView.traitCollection.userInterfaceStyle == .light {
                     LCManager.shared.consoleView.layer.shadowOpacity = 0.25
@@ -174,7 +169,6 @@ class ResizeController {
                 // Activate full screen button.
                 consoleOutlineView.isUserInteractionEnabled = true
             } else {
-                
                 LCManager.shared.consoleView.layer.shadowOpacity = 0.5
                 
                 UIViewPropertyAnimator(duration: 0.6, dampingRatio: 1) {
@@ -212,7 +206,6 @@ class ResizeController {
     var verticalPanner_frameRateRequestID: UUID?
     
     @objc func verticalPanner(recognizer: UIPanGestureRecognizer) {
-        
         let translation = recognizer.translation(in: bottomGrabber.superview)
         
         let minHeight = Self.kMinConsoleHeight
@@ -220,7 +213,7 @@ class ResizeController {
         
         switch recognizer.state {
         case .began:
-            if #available(iOS 15, *) {
+            if #available(iOS 16, *) {
                 verticalPanner_frameRateRequestID = UUID()
                 FrameRateRequest.shared.activate(id: verticalPanner_frameRateRequestID!)
             }
@@ -235,17 +228,16 @@ class ResizeController {
             
             let resolvedHeight: CGFloat = {
                 let initialEstimate = initialHeight + 2 * translation.y
-                if initialEstimate <= maxHeight && initialEstimate > minHeight {
+                if initialEstimate <= maxHeight, initialEstimate > minHeight {
                     return initialEstimate
                 } else if initialEstimate > maxHeight {
-                    
                     var excess = initialEstimate - maxHeight
-                    excess = 25 * log(1/25 * excess + 1)
+                    excess = 25 * log(1 / 25 * excess + 1)
                     
                     return maxHeight + excess
                 } else {
                     var excess = minHeight - initialEstimate
-                    excess = 7 * log(1/7 * excess + 1)
+                    excess = 7 * log(1 / 7 * excess + 1)
                     
                     return minHeight - excess
                 }
@@ -257,7 +249,7 @@ class ResizeController {
             
         case .ended, .cancelled:
            
-            if #available(iOS 15, *), let id = verticalPanner_frameRateRequestID {
+            if #available(iOS 16, *), let id = verticalPanner_frameRateRequestID {
                 verticalPanner_frameRateRequestID = nil
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                     FrameRateRequest.shared.deactivate(id: id)
@@ -296,7 +288,6 @@ class ResizeController {
     var horizontalPanner_frameRateRequestID: UUID?
     
     @objc func horizontalPanner(recognizer: UIPanGestureRecognizer) {
-        
         let translation = recognizer.translation(in: bottomGrabber.superview)
         
         let minWidth = Self.kMinConsoleWidth
@@ -304,7 +295,7 @@ class ResizeController {
         
         switch recognizer.state {
         case .began:
-            if #available(iOS 15, *) {
+            if #available(iOS 16, *) {
                 horizontalPanner_frameRateRequestID = UUID()
                 FrameRateRequest.shared.activate(id: horizontalPanner_frameRateRequestID!)
             }
@@ -319,28 +310,27 @@ class ResizeController {
             
             let resolvedWidth: CGFloat = {
                 let initialEstimate = initialWidth + 2 * translation.x
-                if initialEstimate <= maxWidth && initialEstimate > minWidth {
+                if initialEstimate <= maxWidth, initialEstimate > minWidth {
                     return initialEstimate
                 } else if initialEstimate > maxWidth {
-                    
                     var excess = initialEstimate - maxWidth
-                    excess = 25 * log(1/25 * excess + 1)
+                    excess = 25 * log(1 / 25 * excess + 1)
                     
                     return maxWidth + excess
                 } else {
                     var excess = minWidth - initialEstimate
-                    excess = 7 * log(1/7 * excess + 1)
+                    excess = 7 * log(1 / 7 * excess + 1)
                     
                     return minWidth - excess
                 }
             }()
             
             LCManager.shared.consoleSize.width = resolvedWidth
-            LCManager.shared.consoleView.center.x = (UIScreen.main.nativeBounds.width * 1/2).rounded() / UIScreen.main.scale
+            LCManager.shared.consoleView.center.x = (UIScreen.main.nativeBounds.width * 1 / 2).rounded() / UIScreen.main.scale
             
         case .ended, .cancelled:
             
-            if #available(iOS 15, *), let id = horizontalPanner_frameRateRequestID {
+            if #available(iOS 16, *), let id = horizontalPanner_frameRateRequestID {
                 horizontalPanner_frameRateRequestID = nil
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                     FrameRateRequest.shared.deactivate(id: id)
@@ -355,7 +345,7 @@ class ResizeController {
                     LCManager.shared.consoleSize.width = minWidth
                 }
                 
-                LCManager.shared.consoleView.center.x = (UIScreen.main.nativeBounds.width * 1/2).rounded() / UIScreen.main.scale
+                LCManager.shared.consoleView.center.x = (UIScreen.main.nativeBounds.width * 1 / 2).rounded() / UIScreen.main.scale
                 
                 // Animate autolayout updates.
                 LCManager.shared.consoleViewController.view.layoutIfNeeded()
@@ -372,7 +362,6 @@ class ResizeController {
 
 @available(iOSApplicationExtension, unavailable)
 class PlatterView: UIView {
-    
     override init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -442,7 +431,6 @@ class PlatterView: UIView {
         doneButton.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            
             buttonContainerView.widthAnchor.constraint(equalToConstant: 264),
             buttonContainerView.heightAnchor.constraint(equalToConstant: 52),
             buttonContainerView.centerXAnchor.constraint(equalTo: centerXAnchor),
@@ -544,15 +532,14 @@ class PlatterView: UIView {
     }()
     
     func configureFrame() {
-        self.frame.size = LCManager.shared.consoleViewController.view.frame.size
+        frame.size = LCManager.shared.consoleViewController.view.frame.size
         // Make sure bottom doesn't show on upwards pan.
-        self.frame.size.height += 50
-        self.frame.origin = possibleEndpoints[1]
+        frame.size.height += 50
+        frame.origin = possibleEndpoints[1]
         autoresizingMask = [.flexibleWidth, .flexibleHeight]
     }
     
     func reveal() {
-        
         configureFrame()
         
         UIViewPropertyAnimator(duration: 0.6, dampingRatio: 1) {
@@ -588,6 +575,7 @@ class PlatterView: UIView {
         layer.borderColor = dynamicBorderColor.cgColor
     }
     
+    @available(*, unavailable)
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -599,7 +587,6 @@ class PlatterView: UIView {
     var initialPlatterOriginY = CGFloat.zero
     
     @objc func platterPanner(recognizer: UIPanGestureRecognizer) {
-        
         let translation = recognizer.translation(in: superview)
         let velocity = recognizer.velocity(in: superview)
         
@@ -611,19 +598,17 @@ class PlatterView: UIView {
             let resolvedOriginY: CGFloat = {
                 let initialEstimate = initialPlatterOriginY + translation.y
                 if initialEstimate >= possibleEndpoints[0].y {
-                    
                     // Stick buttons to bottom.
                     [doneButton, resetButton,
                      ResizeController.shared.bottomGrabber, ResizeController.shared.rightGrabber,
-                     LCManager.shared.consoleView
-                    ].forEach {
+                     LCManager.shared.consoleView].forEach {
                         $0.transform = .identity
                     }
                     
                     return initialEstimate
                 } else {
                     var excess = possibleEndpoints[0].y - initialEstimate
-                    excess = 10 * log(1/10 * excess + 1)
+                    excess = 10 * log(1 / 10 * excess + 1)
                     
                     // Stick buttons to bottom.
                     doneButton.transform = .init(translationX: 0, y: excess)
@@ -671,8 +656,7 @@ class PlatterView: UIView {
                 
                 [doneButton, resetButton,
                  ResizeController.shared.bottomGrabber, ResizeController.shared.rightGrabber,
-                 LCManager.shared.consoleView
-                ].forEach {
+                 LCManager.shared.consoleView].forEach {
                     $0.transform = .identity
                 }
             }

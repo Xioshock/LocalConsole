@@ -375,7 +375,7 @@ public class LCManager: NSObject, UIGestureRecognizerDelegate {
         
         // Configure console window.
         func fetchWindow() -> UIWindow? {
-            if #available(iOS 15.0, *) {
+            if #available(iOS 16.0, *) {
                 let windowScene = UIApplication.shared
                     .connectedScenes
                     .filter { $0.activationState == .foregroundActive }
