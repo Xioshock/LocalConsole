@@ -960,7 +960,9 @@ public class LCManager: NSObject, UIGestureRecognizerDelegate {
                                 self.consoleViewController.present(alertController,
                                                                    animated: true)
                             }
-                            action.subtitle = "\(value)"
+                            if #available(iOS 16.0, *) {
+                                action.subtitle = "\(value)"
+                            }
                             actions.append(action)
                         }
                     }
